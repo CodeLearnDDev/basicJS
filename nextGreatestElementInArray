@@ -1,0 +1,23 @@
+var array1 = [4,3,6,19,20];
+var stack = [];
+
+var topOfStack = function(){
+  let item = this[this.length-1]
+  return item;
+}
+
+findNextGreatestElement = function(){
+ 
+   let getTopOfStack = topOfStack.bind(stack);
+   for(item of array1){
+       while(stack.length > 0 && item > getTopOfStack()){
+           console.log(item +" " +getTopOfStack());
+           stack.pop();
+       }
+       stack.push(item);
+   }
+   for(item of stack)
+      console.log("-1" +" " +item)
+}
+
+findNextGreatestElement();
