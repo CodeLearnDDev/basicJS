@@ -1,0 +1,180 @@
+class tree{
+  constructor(){
+    this.root = null;
+  }
+  leftView(root, hash){
+    this.root.level = 0;
+    hash.set(0,this.root);
+    function buildLeftView(node, nextLevel){
+         let leftie = node.left;
+         let rightie = node.right;
+         let levelInFocus = nextLevel +1;
+      
+        if(!hash.get(levelInFocus) && leftie != null){
+          hash.set(levelInFocus, leftie);
+          buildLeftView(leftie,levelInFocus)
+        }
+        else if(!hash.get(nextLevel) && rightie != null){
+          hash.set(levelInFocus, rightie);
+          buildLeftView(rightie,levelInFocus)
+        }
+        else
+           return;   
+    }
+    
+    buildLeftView(this.root,0);
+     var resultMap = new Map([...hash.entries()].sort());
+     for(let [k,v] of resultMap){
+       console.log(v.value);
+     }
+  }
+  rightView(root, hash){
+    this.root.level = 0;
+    hash.set(0,this.root);
+    function buildRightView(node, nextLevel){
+         let leftie = node.left;
+         let rightie = node.right;
+         let levelInFocus = nextLevel +1;
+      
+        if(rightie != null){
+          hash.set(levelInFocus, rightie);
+          buildRightView(rightie,levelInFocus)
+        }
+        else if(leftie != null){
+          hash.set(levelInFocus, leftie);
+          buildRightView(leftie,levelInFocus)
+        }
+        else
+           return;   
+    }
+    
+    buildRightView(this.root,0);
+     var resultMap = new Map([...hash.entries()].sort());
+     for(let [k,v] of resultMap){
+       console.log(v.value);
+     }
+  }
+  topView(root, hash){
+      this.root.level = 0;
+      hash.set(0,this.root);
+    
+      function buildTopView(node){
+            let leftie = node.left;
+            let rightie = node.right;
+          
+            if(leftie != null){
+              leftie.level = node.level - 1;
+              if(!hash.get(leftie.level)){
+                  hash.set(leftie.level, leftie);
+              }
+              buildTopView(leftie);
+            }
+            if(rightie != null){
+              rightie.level = node.level + 1;
+               if(!hash.get(rightie.level)){
+                  hash.set(rightie.level, rightie);
+              }
+              buildTopView(rightie);
+            }
+            else
+              return;
+      }
+    
+    buildTopView(this.root, 0);
+     var resultMap = new Map([...hash.entries()].sort());
+     for(let [k,v] of resultMap){
+       console.log(v.value);
+     }
+  }
+  
+  bottomView(root, hash){
+      this.root.level = 0;
+      hash.set(0,this.root);
+    
+      function buildBottomView(node){
+            let leftie = node.left;
+            let rightie = node.right;
+          
+            if(leftie != null){
+              leftie.level = node.level - 1;
+              hash.set(leftie.level, leftie);
+              buildBottomView(leftie);
+            }
+            if(rightie != null){
+              rightie.level = node.level + 1;
+              hash.set(rightie.level, rightie);
+              buildBottomView(rightie);
+            }
+            else
+              return;
+      }
+    
+    buildBottomView(this.root, 0);
+     var resultMap = new Map([...hash.entries()].sort());
+     for(let [k,v] of resultMap){
+       console.log(v.value);
+     }
+  }
+  
+  iterateTree(node){
+    if(node != null){
+      this.iterateTree(node.left);
+      console.log(node.value);
+      this.iterateTree(node.right);
+    }
+  }
+ 
+  insert(value){
+    let newNode = new Node(value);
+    if(this.root == null){
+      this.root = newNode;
+      return this;
+    }
+    addNode(this.root,newNode);
+    
+    function addNode(node,newNode)
+    { 
+        if (node.value > newNode.value) 
+        {
+            if(node.left == null)
+                node.left = newNode;              
+            else
+                addNode(node.left, newNode);
+        }
+      else
+        {
+          if(node.right == null)
+              node.right = newNode;
+          else
+            addNode(node.right,newNode);
+        }
+    }
+  }
+}
+
+class Node{
+  constructor(value){
+    this.value = value;
+    this.left = null;
+    this.right = null;
+    this.level = null;
+  }
+}
+
+let t = new tree();
+t.insert(10);
+t.insert(2);
+t.insert(5);
+t.insert(13);
+t.insert(50);
+t.insert(1);
+let hashMap = new Map();
+t.iterateTree(t.root);
+console.log("Top View");
+t.topView(t.root, hashMap);
+console.log("Bottom View");
+t.bottomView(t.root, hashMap);
+console.log("Left View");
+t.leftView(t.root, hashMap);
+console.log("Right View");
+t.rightView(t.root, hashMap);
